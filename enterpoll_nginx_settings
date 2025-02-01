@@ -1,0 +1,12 @@
+server {
+    listen 80;
+    server_name ivanefremov.space 194.87.103.107;
+    
+    location /static/ {
+        root /root/enterpoll/enterpoll;
+    }
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/run/gunicorn.sock;
+    }
+}
