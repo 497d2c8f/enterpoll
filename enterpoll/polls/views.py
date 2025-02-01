@@ -46,30 +46,19 @@ class CreatePollView(LoginRequiredMixin, TemplateView):
 	template_name = 'polls/create_poll.html'
 
 	def get(self, request, *args, **kwargs):
-		choices_number = int(request.GET['choices_number']) if 'choices_number' in request.GET else 0
-		choice_modelformset = modelformset_factory(
-			Choice,
-			fields=['text'],
-			extra=choices_number or 2,
-			widgets={'text': forms.Textarea(attrs={'cols': 40, 'rows': 2, 'required': True})}
-		)
+		choice_modelformset = self._get_choice_modelformset(request)
 		return render(
 			request,
 			self.template_name,
 			context={
 				'poll_modelform': PollModelForm(),
-				'choice_modelformset': choice_modelformset(queryset=Choice.objects.none())
+				'choice_modelformset': choice_modelformset
 			}
 		)
 
 	def post(self, request, *args, **kwargs):
 		poll_modelform = PollModelForm(request.POST)
-		choice_modelformset = modelformset_factory(
-			Choice,
-			fields=['text'],
-			extra=int(request.POST['form-TOTAL_FORMS']),
-			widgets={'text': forms.Textarea(attrs={'cols': 40, 'rows': 2, 'required': True})}
-		)(request.POST)
+		choice_modelformset = self._get_choice_modelformset(request)
 		if poll_modelform.is_valid() and choice_modelformset.is_valid():
 			poll = poll_modelform.save(commit=False)
 			poll.user = request.user
@@ -88,6 +77,26 @@ class CreatePollView(LoginRequiredMixin, TemplateView):
 					'choice_modelformset': choice_modelformset
 				}
 			)
+
+	def _get_choice_modelformset(self, request):
+		choice_modelformset_class = modelformset_factory(
+			Choice,
+			fields=['text'],
+			extra=self._get_choices_number(request),
+			widgets={'text': forms.Textarea(attrs={'cols': 40, 'rows': 2, 'required': True})}
+		)
+		if request.method == "POST":
+			return choice_modelformset_class(request.POST)
+		else:
+			return choice_modelformset_class(queryset=Choice.objects.none())
+
+	def _get_choices_number(self, request):
+		if request.method == "GET":
+			return int(request.GET['choices_number']) if 'choices_number' in request.GET else 2
+		elif request.method == "POST":
+			return int(request.POST['form-TOTAL_FORMS'])
+		else:
+			return 2
 
 class RandomPollPageView(RedirectView):
 
