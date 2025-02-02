@@ -20,9 +20,3 @@ class CommentModelForm(forms.ModelForm):
 		labels = {
 			'text': ''
 		}
-
-class ContactForm(forms.Form):
-	subject = None
-
-class ContactForm2(forms.Form):
-	subject = forms.IntegerField()
