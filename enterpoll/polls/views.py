@@ -86,23 +86,27 @@ class CreatePollView(LoginRequiredMixin, TemplateView):
 
 	def post(self, request, *args, **kwargs):
 		poll_modelform = PollModelForm(request.POST)
-		choice_modelformset = self._get_choice_modelformset(request)
-		if poll_modelform.is_valid() and choice_modelformset.is_valid():
+		print(poll_modelform)
+		if poll_modelform.is_valid():
 			poll = poll_modelform.save(commit=False)
 			poll.user = request.user
 			poll.save()
-			choices = choice_modelformset.save(commit=False)
-			for choice in choices:
-				choice.poll = poll
-				choice.save()
-			return redirect(poll)
+			choice_modelformset = self._get_choice_modelformset(request)
+			if choice_modelformset.is_valid():
+				choices = choice_modelformset.save(commit=False)
+				for choice in choices:
+					choice.poll = poll
+					choice.save()
+				return redirect(poll)
+			else:
+				poll.delete()
 		else:
 			return render(
 				request,
 				self.template_name,
 				context={
 					'poll_modelform': poll_modelform,
-					'choice_modelformset': choice_modelformset
+					'choice_modelformset': self._get_choice_modelformset(request)
 				}
 			)
 
@@ -111,7 +115,7 @@ class CreatePollView(LoginRequiredMixin, TemplateView):
 			Choice,
 			fields=['text'],
 			extra=self._get_choices_number(request),
-			widgets={'text': forms.Textarea(attrs={'cols': 40, 'rows': 2, 'required': True})}
+			widgets={'text': forms.Textarea(attrs={'cols': 40, 'rows': 2, 'required': True})},
 		)
 		if request.method == "POST":
 			return choice_modelformset_class(request.POST)

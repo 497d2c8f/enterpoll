@@ -10,8 +10,8 @@ import custom_validators
 class Poll(models.Model):
 
 	title = models.CharField('Заголовок', max_length=100, validators=[custom_validators.forbidden_words])
-	description = models.CharField('Описание', max_length=100, blank=True, validators=[custom_validators.forbidden_words])
-	user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name='Автор')
+	description = models.CharField('Описание', max_length=100, blank=True, null=True, validators=[custom_validators.forbidden_words])
+	user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
 	created = models.DateTimeField('Время создания', auto_now_add=True)
 
 	def __str__(self):
@@ -34,7 +34,7 @@ class Poll(models.Model):
 		return self.rating_set.aggregate(Avg('value', default=0))['value__avg']
 
 class Choice(models.Model):
-	poll = models.ForeignKey(Poll, on_delete=models.CASCADE, blank=True)
+	poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
 	text = models.CharField('', max_length=100, validators=[custom_validators.forbidden_words])
 
 	def __str__(self):
@@ -45,19 +45,19 @@ class Choice(models.Model):
 		return self.vote_set.count()
 
 class Vote(models.Model):
-	user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
 	choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
 	created = models.DateTimeField(auto_now=True)
 
 class Rating(models.Model):
-	user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
 	value = models.IntegerField()
 	created = models.DateTimeField(auto_now=True)
 
 class Comment(models.Model):
-	user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
 	text = models.CharField('Текст', max_length=100, validators=[custom_validators.forbidden_words])
 	created = models.DateTimeField(auto_now_add=True)
