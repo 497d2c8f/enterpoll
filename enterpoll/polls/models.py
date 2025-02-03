@@ -13,6 +13,7 @@ class Poll(models.Model):
 	description = models.CharField('Описание', max_length=100, blank=True, null=True, validators=[custom_validators.forbidden_words])
 	user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
 	created = models.DateTimeField('Время создания', auto_now_add=True)
+	is_published = models.BooleanField(default=True)
 
 	def __str__(self):
 		length = 50
@@ -20,6 +21,9 @@ class Poll(models.Model):
 
 	def get_absolute_url(self):
 		return reverse('poll_page', kwargs={"poll_pk": self.pk})
+
+	def get_number_of_choices(self):
+		return self.choice_set.count()
 
 	def get_number_of_votes(self):
 		return self.vote_set.count()

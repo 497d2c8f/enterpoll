@@ -10,4 +10,4 @@ class PollsListSerializer(serializers.ModelSerializer):
 class CreatePollSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Poll
-		exclude = ['created', 'user']
+		exclude = ['created', 'user', 'is_published']

@@ -59,7 +59,6 @@ class CreatePollView(LoginRequiredMixin, TemplateView):
 
 	def post(self, request, *args, **kwargs):
 		poll_modelform = PollModelForm(request.POST)
-		print(poll_modelform)
 		if poll_modelform.is_valid():
 			poll = poll_modelform.save(commit=False)
 			poll.user = request.user
