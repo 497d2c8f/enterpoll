@@ -8,18 +8,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django import forms
 from django.forms import modelformset_factory
-from django.forms.models import model_to_dict
 from polls.forms import PollModelForm, CommentModelForm
 from polls.models import Poll, Choice, Vote, Rating, Comment
 from django.core.paginator import Paginator
 import random
-
-from rest_framework import (
-	views as rest_views,
-	generics as rest_generics,
-	response as rest_response
-)
-from .serializers import PollsListSerializer
 
 # Create your views here.
 
@@ -35,20 +27,6 @@ class MainPageView(TemplateView):
 		context['latest_polls'] = polls.order_by('-created')[0:3]
 		return context
 
-	class APIViewV1(rest_views.APIView):
-
-		def get(self, request):
-			polls = Poll.objects.all()
-			most_popular_polls = sorted(polls, key=Poll.get_number_of_votes, reverse=True)[0:3]
-			highly_rated_polls = sorted(polls, key=Poll.get_average_rating, reverse=True)[0:3]
-			latest_polls = polls.order_by('-created')[0:3]
-			response_dict = {
-				'most_popular_polls_id': [poll.id for poll in most_popular_polls],
-				'highly_rated_polls_id': [poll.id for poll in highly_rated_polls],
-				'latest_polls_id': [poll.id for poll in latest_polls]
-			}
-			return rest_response.Response(response_dict)
-
 class PollsListView(ListView):
 
 	model = Poll
@@ -62,11 +40,6 @@ class PollsListView(ListView):
 		context = super().get_context_data(**kwargs)
 		context['page_kwarg'] = self.page_kwarg
 		return context
-
-	class APIViewV1(rest_generics.ListAPIView):
-
-		queryset = Poll.objects.all()
-		serializer_class = PollsListSerializer
 
 class CreatePollView(LoginRequiredMixin, TemplateView):
 

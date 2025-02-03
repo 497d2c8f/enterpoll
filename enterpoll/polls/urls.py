@@ -1,10 +1,11 @@
 from django.urls import path, include
 
-from . import views
+from . import views, api_views
 
 api_v1_patterns = [
-	path("polls_list/", views.PollsListView.APIViewV1.as_view(), name="polls_list_api_v1"),
-	path("main_page/", views.MainPageView.APIViewV1.as_view(), name="main_page_api_v1"),
+	path("main_page/", api_views.MainPageAPIViewV1.as_view(), name="main_page_api_v1"),
+	path("polls_list/", api_views.PollsListAPIViewV1.as_view(), name="polls_list_api_v1"),
+	path("create_poll/", api_views.CreatePollAPIViewV1.as_view(), name="create_poll_api_v1"),
 ]
 
 urlpatterns = [
