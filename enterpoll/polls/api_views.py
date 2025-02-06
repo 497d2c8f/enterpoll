@@ -1,11 +1,14 @@
 from django.utils.translation import gettext_lazy as _
-from polls.models import Poll, Choice, Comment
+from polls.models import Poll, Choice, Vote, Comment
 from .api_serializers import (
 	PollListSerializer,
 	PollAndChoicesSerializer,
 	DetailedPollSerializer,
-	CommentListSerializer,
+#	CommentListSerializer,
 	CommentSerializer,
+#	VoteListSerializer,
+	VoteSerializer,
+	ChoiceSerializer
 )
 from rest_framework import (
 	status,
@@ -31,7 +34,7 @@ class MainPageAPIViewV1(drf_views.APIView):
 
 class PollListAPIViewV1(drf_generics.ListAPIView):
 
-	queryset = Poll.objects.all()
+	queryset = Poll.objects.order_by('-created')
 	serializer_class = PollListSerializer
 
 class CreatePollAPIViewV1(drf_generics.CreateAPIView):
@@ -43,7 +46,7 @@ class CreatePollAPIViewV1(drf_generics.CreateAPIView):
 		response.data = DetailedPollSerializer(Poll.objects.get(**request.data['poll'])).data
 		return response
 
-class DetailedPollAPIViewV1(drf_generics.RetrieveAPIView):
+class GetPollAPIViewV1(drf_generics.RetrieveAPIView):
 
 	queryset = Poll.objects.all()
 	serializer_class = DetailedPollSerializer
@@ -59,20 +62,45 @@ class DeletePollAPIViewV1(drf_generics.DestroyAPIView):
 	queryset = Poll.objects.all()
 	lookup_url_kwarg = 'poll_pk'
 
-class PollCommentListAPIViewV1(drf_generics.ListAPIView):
+class VoteListAPIViewV1(drf_generics.ListAPIView):
 
-	serializer_class = CommentListSerializer
+	serializer_class = VoteSerializer
 
 	def get_queryset(self):
 		poll = Poll.objects.get(pk=self.kwargs['poll_pk'])
-		queryset = poll.comment_set.all()
+		queryset = poll.vote_set.order_by('-created')
+		return queryset
+
+class CreateVoteAPIViewV1(drf_generics.CreateAPIView):
+
+	serializer_class = VoteSerializer
+
+class GetVoteAPIViewV1(drf_generics.RetrieveAPIView):
+
+	queryset = Vote.objects.all()
+	serializer_class = VoteSerializer
+	lookup_url_kwarg = 'vote_pk'
+
+class DeleteVoteAPIViewV1(drf_generics.DestroyAPIView):
+
+	queryset = Vote.objects.all()
+	serializer_class = VoteSerializer
+	lookup_url_kwarg = 'vote_pk'
+
+class CommentListAPIViewV1(drf_generics.ListAPIView):
+
+	serializer_class = CommentSerializer
+
+	def get_queryset(self):
+		poll = Poll.objects.get(pk=self.kwargs['poll_pk'])
+		queryset = poll.comment_set.order_by('-created')
 		return queryset
 
 class CreatePollCommentAPIViewV1(drf_generics.CreateAPIView):
 
 	serializer_class = CommentSerializer
 
-class CommentAPIViewV1(drf_generics.RetrieveAPIView):
+class GetCommentAPIViewV1(drf_generics.RetrieveAPIView):
 
 	queryset = Comment.objects.all()
 	serializer_class = CommentSerializer
