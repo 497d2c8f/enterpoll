@@ -2,19 +2,11 @@ from drf_compound_fields.fields import ListField
 from rest_framework import serializers
 from .models import Poll, Choice, Vote, Comment
 from rest_framework.parsers import JSONParser
-from collections import namedtuple
 import io
 import custom_validators
 
-class PollListSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Poll
-		fields = ['pk', 'title', 'description', 'user', 'created']
 
-class PollSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Poll
-		fields = ['title', 'description']
+
 
 class ChoiceSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -22,27 +14,26 @@ class ChoiceSerializer(serializers.ModelSerializer):
 		fields = ['pk', 'text']
 		read_only_fields = ['pk']
 
-class PollAndChoicesSerializer(serializers.Serializer):
-	poll = PollSerializer()
-	choices = serializers.ListField(child=ChoiceSerializer(), min_length=2, max_length=10)
+class PollSerializer(serializers.ModelSerializer):
+	choice_set = ChoiceSerializer(many=True, min_length=2, max_length=10)
 
-	poll_and_choices = namedtuple('poll_and_choices', ['poll', 'choices'])
-
-	def create(self, validated_data):
-		poll = Poll.objects.create(**validated_data['poll'], user=self.context['request'].user)
-		choices = Choice.objects.bulk_create([Choice(poll=poll, text=choice['text']) for choice in validated_data['choices']])
-		return self.poll_and_choices(poll, choices)
-
-class DetailedPollSerializer(serializers.ModelSerializer):
-	choice_set = ChoiceSerializer(many=True)
 	class Meta:
 		model = Poll
 		fields = ['pk', 'title', 'description', 'choice_set', 'user', 'created']
+		read_only_fields = ['pk', 'user', 'created']
 
-#class VoteListSerializer(serializers.ModelSerializer):
-#	class Meta:
-#		model = Vote
-#		fields = ['pk', 'user', 'choice', 'created']
+	def create(self, validated_data):
+		poll = Poll.objects.create(
+			title=validated_data['title'],
+			description=validated_data['description'],
+			user=self.context['request'].user
+		)
+		choices = [Choice(poll=poll, text=choice['text']) for choice in validated_data['choice_set']]
+		Choice.objects.bulk_create(choices)
+		return poll
+
+
+
 
 class VoteSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -62,10 +53,8 @@ class VoteSerializer(serializers.ModelSerializer):
 			vote = poll.vote_set.create(user=user, choice=choice)
 		return vote
 
-#class CommentListSerializer(serializers.ModelSerializer):
-#	class Meta:
-#		model = Comment
-#		fields = ['pk', 'user', 'text', 'created']
+
+
 
 class CommentSerializer(serializers.ModelSerializer):
 	class Meta:

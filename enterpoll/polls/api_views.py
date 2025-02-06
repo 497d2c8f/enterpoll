@@ -1,12 +1,8 @@
 from django.utils.translation import gettext_lazy as _
 from polls.models import Poll, Choice, Vote, Comment
 from .api_serializers import (
-	PollListSerializer,
-	PollAndChoicesSerializer,
-	DetailedPollSerializer,
-#	CommentListSerializer,
+	PollSerializer,
 	CommentSerializer,
-#	VoteListSerializer,
 	VoteSerializer,
 	ChoiceSerializer
 )
@@ -17,6 +13,9 @@ from rest_framework import (
 	generics as drf_generics,
 	response as drf_response
 )
+
+
+
 
 class MainPageAPIViewV1(drf_views.APIView):
 
@@ -32,35 +31,31 @@ class MainPageAPIViewV1(drf_views.APIView):
 		}
 		return drf_response.Response(response_dict)
 
+
+
+
 class PollListAPIViewV1(drf_generics.ListAPIView):
 
 	queryset = Poll.objects.order_by('-created')
-	serializer_class = PollListSerializer
+	serializer_class = PollSerializer
 
 class CreatePollAPIViewV1(drf_generics.CreateAPIView):
 
-	serializer_class = PollAndChoicesSerializer
-
-	def create(self, request, *args, **kwargs):
-		response = super().create(request, *args, **kwargs)
-		response.data = DetailedPollSerializer(Poll.objects.get(**request.data['poll'])).data
-		return response
+	serializer_class = PollSerializer
 
 class GetPollAPIViewV1(drf_generics.RetrieveAPIView):
 
 	queryset = Poll.objects.all()
-	serializer_class = DetailedPollSerializer
+	serializer_class = PollSerializer
 	lookup_url_kwarg = 'poll_pk'
-
-#	def retrieve(self, request, *args, **kwargs):
-#		poll = self.queryset.get(pk=kwargs[self.lookup_url_kwarg])
-#		serializer = self.serializer_class(poll)
-#		return drf_response.Response(serializer.data)
 
 class DeletePollAPIViewV1(drf_generics.DestroyAPIView):
 
 	queryset = Poll.objects.all()
 	lookup_url_kwarg = 'poll_pk'
+
+
+
 
 class VoteListAPIViewV1(drf_generics.ListAPIView):
 
@@ -86,6 +81,9 @@ class DeleteVoteAPIViewV1(drf_generics.DestroyAPIView):
 	queryset = Vote.objects.all()
 	serializer_class = VoteSerializer
 	lookup_url_kwarg = 'vote_pk'
+
+
+
 
 class CommentListAPIViewV1(drf_generics.ListAPIView):
 
