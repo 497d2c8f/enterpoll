@@ -1,6 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 from polls.models import Poll, Choice
-from .api_serializers import PollsListSerializer, CreatePollSerializer
+from .api_serializers import PollsListSerializer, CompletePollSerializer
 from rest_framework import (
 	status,
 	exceptions as drf_exceptions,
@@ -28,27 +28,26 @@ class PollsListAPIViewV1(drf_generics.ListAPIView):
 	queryset = Poll.objects.all()
 	serializer_class = PollsListSerializer
 
-class CreatePollAPIViewV1(drf_generics.CreateAPIView):
+class CreateCompletePollAPIViewV1(drf_generics.CreateAPIView):
 
-	serializer_class = CreatePollSerializer
+	serializer_class = CompletePollSerializer
 
-	def post(self, request, *args, **kwargs):
-		user_polls = Poll.objects.filter(user=request.user)
-		if not user_polls or user_polls.last().is_published:
-			return super().post(request, *args, **kwargs)
-		number_of_choices = user_polls.last().get_number_of_choices()
-		if number_of_choices < 2:
-			raise drf_exceptions.APIException(detail=_(f'User ({request.user.username}) has unpublished poll (pk = {user_polls.last().pk}) with an unacceptable number of choices ({number_of_choices}, but it requires 2-10 choices).'))
+	def get(self, *args, **kwargs):
+		response_dict = {
+			'complete_poll_creation_form': {
+				'poll': {
+					'title': '',
+					'description': ''
 
-	def perform_create(self, serializer):
-		'''
-		Метод perform_create из rest_framework.mixins.CreateModelMixin.
-		Метод save сериализатора принимает дополнительные ключевые аргументы,
-		которые в итоге передаются методу создания объекта модели Poll.
-		Теперь текущий пользователь автоматически становится автором создаваемого опроса.
-		ЭТИ ДВЕ СТРОКИ СТОИЛИ МНЕ НЕСКОЛЬКИХ ЧАСОВ ЧТЕНИЯ КОДА DJANGO REST FRAMEWORK!!!
-		ГОРЖУСЬ ЭТИМИ СТРОКАМИ!!!
-		'''
-		serializer.save(user=self.request.user, is_published=False)
+				},
+				'choices': [
+					{'text': ''},
+					{'text': ''}
+				]
+			}
+		}
+		return drf_response.Response(response_dict)
 
-class CreateChoiceAPIViewV1(drf_generics.CreateAPIView): pass
+class DeleteCompletePollAPIViewV1(drf_generics.CreateAPIView): pass
+
+#классы для создания/удаления голоса, оценки и комментария
