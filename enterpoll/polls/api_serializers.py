@@ -2,6 +2,7 @@ from drf_compound_fields.fields import ListField
 from rest_framework import serializers
 from .models import Poll, Choice, Comment
 from rest_framework.parsers import JSONParser
+from collections import namedtuple
 import io
 import custom_validators
 
@@ -22,24 +23,19 @@ class ChoiceSerializer(serializers.ModelSerializer):
 
 class PollAndChoicesSerializer(serializers.Serializer):
 	poll = PollSerializer()
-	choices = ChoiceSerializer(many=True)
+	choices = serializers.ListField(child=ChoiceSerializer(), min_length=2, max_length=10)
 
-	class PollAndChoices:
-		def __init__(self, poll, choices):
-			self.poll = poll
-			self.choices = choices
+#	class PollAndChoices:
+#		def __init__(self, poll, choices):
+#			self.poll = poll
+#			self.choices = choices
+
+	poll_and_choices = namedtuple('PollAndChoices', ['poll', 'choices'])
 
 	def create(self, validated_data):
-
-		poll_serializer = type(self.fields['poll'])(data={**validated_data['poll']})
-		poll_serializer.is_valid(raise_exception=True)
-		poll = poll_serializer.save(user=self.context['request'].user)
-
-		choices_serializer = type(self.fields['choices'].child)(many=True, data=validated_data['choices'])
-		choices_serializer.is_valid(raise_exception=True)
-		choices = choices_serializer.save(poll=poll)
-
-		return self.PollAndChoices(poll, choices)
+		poll = Poll.objects.create(**validated_data['poll'], user=self.context['request'].user)
+		choices = Choice.objects.bulk_create([Choice(poll=poll, text=choice['text']) for choice in validated_data['choices']])
+		return self.poll_and_choices(poll, choices)
 
 class DetailedPollSerializer(serializers.ModelSerializer):
 	class Meta:
