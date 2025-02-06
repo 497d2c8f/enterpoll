@@ -38,18 +38,10 @@ class CreatePollAPIViewV1(drf_generics.CreateAPIView):
 
 	serializer_class = PollAndChoicesSerializer
 
-#	json форма для создания опроса = {
-#		'poll': {
-#			'title': '',
-#			'description': ''
-#
-#		},
-#		'choices': [
-#			{'text': ''},
-#			{'text': ''},
-#			и так далее...
-#		]
-#	}
+	def create(self, request, *args, **kwargs):
+		response = super().create(request, *args, **kwargs)
+		response.data = DetailedPollSerializer(Poll.objects.get(**request.data['poll'])).data
+		return response
 
 class DetailedPollAPIViewV1(drf_generics.RetrieveAPIView):
 

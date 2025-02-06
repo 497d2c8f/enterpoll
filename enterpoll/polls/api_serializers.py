@@ -38,9 +38,10 @@ class PollAndChoicesSerializer(serializers.Serializer):
 		return self.poll_and_choices(poll, choices)
 
 class DetailedPollSerializer(serializers.ModelSerializer):
+	choice_set = ChoiceSerializer(many=True)
 	class Meta:
 		model = Poll
-		fields = ['pk', 'title', 'description', 'user', 'created']
+		fields = ['pk', 'title', 'description', 'choice_set', 'user', 'created']
 
 class CommentListSerializer(serializers.ModelSerializer):
 	class Meta:
