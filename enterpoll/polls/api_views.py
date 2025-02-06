@@ -1,6 +1,12 @@
 from django.utils.translation import gettext_lazy as _
-from polls.models import Poll, Choice
-from .api_serializers import PollsListSerializer, CompletePollSerializer
+from polls.models import Poll, Choice, Comment
+from .api_serializers import (
+	PollListSerializer,
+	PollAndChoicesSerializer,
+	DetailedPollSerializer,
+	CommentListSerializer,
+	CommentSerializer,
+)
 from rest_framework import (
 	status,
 	exceptions as drf_exceptions,
@@ -23,31 +29,65 @@ class MainPageAPIViewV1(drf_views.APIView):
 		}
 		return drf_response.Response(response_dict)
 
-class PollsListAPIViewV1(drf_generics.ListAPIView):
+class PollListAPIViewV1(drf_generics.ListAPIView):
 
 	queryset = Poll.objects.all()
-	serializer_class = PollsListSerializer
+	serializer_class = PollListSerializer
 
-class CreateCompletePollAPIViewV1(drf_generics.CreateAPIView):
+class CreatePollAPIViewV1(drf_generics.CreateAPIView):
 
-	serializer_class = CompletePollSerializer
+	serializer_class = PollAndChoicesSerializer
 
-	def get(self, *args, **kwargs):
-		response_dict = {
-			'complete_poll_creation_form': {
-				'poll': {
-					'title': '',
-					'description': ''
+#	json форма для создания опроса = {
+#		'poll': {
+#			'title': '',
+#			'description': ''
+#
+#		},
+#		'choices': [
+#			{'text': ''},
+#			{'text': ''},
+#			и так далее...
+#		]
+#	}
 
-				},
-				'choices': [
-					{'text': ''},
-					{'text': ''}
-				]
-			}
-		}
-		return drf_response.Response(response_dict)
+class DetailedPollAPIViewV1(drf_generics.RetrieveAPIView):
 
-class DeleteCompletePollAPIViewV1(drf_generics.CreateAPIView): pass
+	queryset = Poll.objects.all()
+	serializer_class = DetailedPollSerializer
+	lookup_url_kwarg = 'poll_pk'
 
-#классы для создания/удаления голоса, оценки и комментария
+#	def retrieve(self, request, *args, **kwargs):
+#		poll = self.queryset.get(pk=kwargs[self.lookup_url_kwarg])
+#		serializer = self.serializer_class(poll)
+#		return drf_response.Response(serializer.data)
+
+class DeletePollAPIViewV1(drf_generics.DestroyAPIView):
+
+	queryset = Poll.objects.all()
+	lookup_url_kwarg = 'poll_pk'
+
+class PollCommentListAPIViewV1(drf_generics.ListAPIView):
+
+	serializer_class = CommentListSerializer
+
+	def get_queryset(self):
+		poll = Poll.objects.get(pk=self.kwargs['poll_pk'])
+		queryset = poll.comment_set.all()
+		return queryset
+
+class CreatePollCommentAPIViewV1(drf_generics.CreateAPIView):
+
+	serializer_class = CommentSerializer
+
+class CommentAPIViewV1(drf_generics.RetrieveAPIView):
+
+	queryset = Comment.objects.all()
+	serializer_class = CommentSerializer
+	lookup_url_kwarg = 'comment_pk'
+
+class DeleteCommentAPIViewV1(drf_generics.DestroyAPIView):
+
+	queryset = Comment.objects.all()
+	serializer_class = CommentSerializer
+	lookup_url_kwarg = 'comment_pk'

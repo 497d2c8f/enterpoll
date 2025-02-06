@@ -20,7 +20,7 @@ from django.shortcuts import render
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('polls.urls')),
+    path('enterpoll/', include('polls.urls')),
     path('users/', include('users.urls')),
 ]
 

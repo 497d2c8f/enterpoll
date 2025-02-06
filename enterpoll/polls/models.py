@@ -13,7 +13,6 @@ class Poll(models.Model):
 	description = models.CharField('Описание', max_length=100, blank=True, null=True, validators=[custom_validators.forbidden_words])
 	user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
 	created = models.DateTimeField('Время создания', auto_now_add=True)
-#	is_published = models.BooleanField(default=True)
 
 	def __str__(self):
 		length = 50
