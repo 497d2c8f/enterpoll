@@ -13,22 +13,22 @@
 					{% if choice == user_choice %}
 						<input type="text" name="action_type" value="delete_vote" hidden>
 						<input type="text" name="choice_pk" value="{{ choice.pk }}" hidden>
-						<input class="selected_choice" type="submit" value="{{ choice.text }} ({{ choice.get_number_of_votes }})">
+						<input class="selected_choice" type="submit" value="{{ choice.text }} ({{ choice.number_of_votes }})">
 					{% else %}
 						<input type="text" name="action_type" value="vote" hidden>
 						<input type="text" name="choice_pk" value="{{ choice.pk }}" hidden>
-						<input type="submit" value="{{ choice.text }} ({{ choice.get_number_of_votes }})">
+						<input type="submit" value="{{ choice.text }} ({{ choice.number_of_votes }})">
 					{% endif %}
 				</form>
 			</li>
 		{% endfor %}
 	</ul>
-	<p>Описание: {{ poll.description }}</p>
-	<p>Количество голосов: {{ poll.get_number_of_votes }}</p>
+	<p>Описание: {{ poll.description|default:"..." }}</p>
+	<p>Количество голосов: {{ poll.number_of_votes }}</p>
 	<p>Автор: {{ poll.user }}</p>
 	<p>Дата создания: {{ poll.created|date:"Y.m.d H:i:s e" }}</p>
 	<p>
-		Рейтинг: {{ poll.get_average_rating|floatformat:1 }} (Всего оценок: {{ poll.get_number_of_ratings }})<br>
+		Рейтинг: {{ poll.average_rating|floatformat:1 }} (Всего оценок: {{ poll.number_of_ratings }})<br>
 		<div style="display: inline-block">
 		{% spaceless %}
 		Оценить:
@@ -56,7 +56,7 @@
 			<input type="submit" value="Удалить опрос">
 		</form>
 	{% endif %}
-	<h3>Комментарии ({{ poll.get_number_of_comments }}):</h3>
+	<h3>Комментарии ({{ poll.number_of_comments }}):</h3>
 	{% pagination comments_page_kwarg comments_page_obj %}
 	<form method="POST">
 		{% csrf_token %}

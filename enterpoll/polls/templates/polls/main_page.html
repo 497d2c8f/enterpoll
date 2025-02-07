@@ -21,7 +21,7 @@
 							<a href="{% url 'poll_page' poll.pk %}">{{ poll.title }}</a>
 						</td>
 						<td>
-							{{ poll.get_number_of_votes }}
+							{{ poll.number_of_votes }}
 						</td>
 					</tr>
 				{% endfor %}
@@ -42,7 +42,7 @@
 							<a href="{% url 'poll_page' poll.pk %}">{{ poll.title }}</a>
 						</td>
 						<td>
-							{{ poll.get_average_rating|floatformat:2 }}
+							{{ poll.average_rating|floatformat:2 }}
 						</td>
 					</tr>
 				{% endfor %}

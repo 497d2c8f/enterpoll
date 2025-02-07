@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models import Avg
 from django.contrib import admin
 import custom_validators
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Create your models here.
 
@@ -21,19 +22,24 @@ class Poll(models.Model):
 	def get_absolute_url(self):
 		return reverse('poll_page', kwargs={"poll_pk": self.pk})
 
-	def get_number_of_choices(self):
+	@property
+	def number_of_choices(self):
 		return self.choice_set.count()
 
-	def get_number_of_votes(self):
+	@property
+	def number_of_votes(self):
 		return self.vote_set.count()
 
-	def get_number_of_comments(self):
+	@property
+	def number_of_comments(self):
 		return self.comment_set.count()
 
-	def get_number_of_ratings(self):
+	@property
+	def number_of_ratings(self):
 		return self.rating_set.count()
 
-	def get_average_rating(self):
+	@property
+	def average_rating(self):
 		return self.rating_set.aggregate(Avg('value', default=0))['value__avg']
 
 class Choice(models.Model):
@@ -44,7 +50,8 @@ class Choice(models.Model):
 		length = 50
 		return self.text if len(self.text) < length else self.text[:length] + '…'
 
-	def get_number_of_votes(self):
+	@property
+	def number_of_votes(self):
 		return self.vote_set.count()
 
 class Vote(models.Model):
@@ -56,7 +63,7 @@ class Vote(models.Model):
 class Rating(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
-	value = models.IntegerField()
+	value = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
 	created = models.DateTimeField(auto_now=True)
 
 class Comment(models.Model):

@@ -1,9 +1,10 @@
 from django.utils.translation import gettext_lazy as _
-from polls.models import Poll, Choice, Vote, Comment
+from polls.models import Poll, Choice, Vote, Comment, Rating
 from .api_serializers import (
 	PollSerializer,
 	CommentSerializer,
 	VoteSerializer,
+	RatingSerializer,
 	ChoiceSerializer
 )
 from rest_framework import (
@@ -81,6 +82,34 @@ class DeleteVoteAPIViewV1(drf_generics.DestroyAPIView):
 	queryset = Vote.objects.all()
 	serializer_class = VoteSerializer
 	lookup_url_kwarg = 'vote_pk'
+
+
+
+
+class RatingListAPIViewV1(drf_generics.ListAPIView):
+
+	serializer_class = RatingSerializer
+
+	def get_queryset(self):
+		poll = Poll.objects.get(pk=self.kwargs['poll_pk'])
+		queryset = poll.rating_set.order_by('-created')
+		return queryset
+
+class CreateRatingAPIViewV1(drf_generics.CreateAPIView):
+
+	serializer_class = RatingSerializer
+
+class GetRatingAPIViewV1(drf_generics.RetrieveAPIView):
+
+	queryset = Rating.objects.all()
+	serializer_class = RatingSerializer
+	lookup_url_kwarg = 'rating_pk'
+
+class DeleteRatingAPIViewV1(drf_generics.DestroyAPIView):
+
+	queryset = Rating.objects.all()
+	serializer_class = RatingSerializer
+	lookup_url_kwarg = 'rating_pk'
 
 
 
