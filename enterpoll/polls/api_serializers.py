@@ -1,9 +1,10 @@
-from drf_compound_fields.fields import ListField
 from rest_framework import serializers
 from .models import Poll, Choice, Vote, Rating, Comment
 from rest_framework.parsers import JSONParser
 import io
 import custom_validators
+from rest_framework import exceptions as drf_exceptions
+from django.utils.translation import gettext_lazy as _
 
 
 
@@ -50,7 +51,11 @@ class PollSerializer(serializers.ModelSerializer):
 			user=self.context['request'].user
 		)
 		choices = [Choice(poll=poll, text=choice['text']) for choice in validated_data['choice_set']]
-		Choice.objects.bulk_create(choices)
+		try:
+			Choice.objects.bulk_create(choices)
+		except Exception as e:
+			poll.delete()
+			raise drf_exceptions.APIException(detail=_(str(e)))
 		return poll
 
 

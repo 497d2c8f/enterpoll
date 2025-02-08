@@ -22,8 +22,8 @@ class MainPageView(TemplateView):
 	def get_context_data(self, *args, **kwargs):
 		context = super().get_context_data(*args, **kwargs)
 		polls = Poll.objects.all()
-		context['most_popular_polls'] = sorted(polls, key=Poll.number_of_votes, reverse=True)[0:3]
-		context['highly_rated_polls'] = sorted(polls, key=Poll.average_rating, reverse=True)[0:3]
+		context['most_popular_polls'] = sorted(polls, key=(lambda poll: poll.number_of_votes), reverse=True)[0:3]
+		context['highly_rated_polls'] = sorted(polls, key=(lambda poll: poll.average_rating), reverse=True)[0:3]
 		context['latest_polls'] = polls.order_by('-created')[0:3]
 		return context
 

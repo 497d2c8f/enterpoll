@@ -8,6 +8,7 @@ api_v1_patterns = [
 	path("polls/list/", api_views.PollListAPIViewV1.as_view(), name="poll_list_api_v1"),
 	path("polls/create/", api_views.CreatePollAPIViewV1.as_view(), name="create_poll_api_v1"),
 	path("polls/<int:poll_pk>/", api_views.GetPollAPIViewV1.as_view(), name="get_poll_api_v1"),
+	path("polls/random/", api_views.GetRandomPollAPIViewV1.as_view(), name="get_random_poll_api_v1"),
 	path("polls/<int:poll_pk>/delete/", api_views.DeletePollAPIViewV1.as_view(), name="delete_poll_api_v1"),
 
 	path("polls/<int:poll_pk>/vote_list/", api_views.VoteListAPIViewV1.as_view(), name="vote_list_api_v1"),

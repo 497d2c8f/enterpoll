@@ -15,6 +15,9 @@ class Poll(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
 	created = models.DateTimeField('Время создания', auto_now_add=True)
 
+	class Meta:
+		constraints = [models.UniqueConstraint(fields=('title', 'user'), name="unique_poll" )]
+
 	def __str__(self):
 		length = 50
 		return self.title if len(self.title) < length else self.title[:length] + '…'
@@ -46,6 +49,9 @@ class Choice(models.Model):
 	poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
 	text = models.CharField('', max_length=100, validators=[custom_validators.forbidden_words])
 
+	class Meta:
+		constraints = [models.UniqueConstraint(fields=('poll', 'text'), name="unique_choice" )]
+
 	def __str__(self):
 		length = 50
 		return self.text if len(self.text) < length else self.text[:length] + '…'
@@ -60,11 +66,17 @@ class Vote(models.Model):
 	choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
 	created = models.DateTimeField(auto_now=True)
 
+	class Meta:
+		constraints = [models.UniqueConstraint(fields=('user', 'poll'), name="unique_vote" )]
+
 class Rating(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
 	value = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
 	created = models.DateTimeField(auto_now=True)
+
+	class Meta:
+		constraints = [models.UniqueConstraint(fields=('user', 'poll'), name="unique_rating" )]
 
 class Comment(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
