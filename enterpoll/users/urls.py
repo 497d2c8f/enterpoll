@@ -4,6 +4,7 @@ from . import views, api_views
 
 api_v1_patterns = [
 	path("login/", api_views.LoginAPIViewV1.as_view(), name="login_api_v1"),
+	path("logout/", api_views.LogoutAPIViewV1.as_view(), name="logout_api_v1"),
 ]
 
 urlpatterns = [
