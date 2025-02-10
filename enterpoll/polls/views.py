@@ -12,6 +12,7 @@ from polls.forms import PollModelForm, CommentModelForm
 from polls.models import Poll, Choice, Vote, Rating, Comment
 from django.core.paginator import Paginator
 import random
+from django.contrib.sessions.models import Session
 
 # Create your views here.
 

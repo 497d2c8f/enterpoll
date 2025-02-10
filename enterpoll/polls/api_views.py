@@ -23,7 +23,7 @@ import random
 
 class MainPageAPIViewV1(drf_views.APIView):
 
-	def get(self, request):
+	def get(self, request, *args, **kwargs):
 		polls = Poll.objects.all()
 		most_popular_polls = sorted(polls, key=Poll.get_number_of_votes, reverse=True)[0:3]
 		highly_rated_polls = sorted(polls, key=Poll.get_average_rating, reverse=True)[0:3]
@@ -58,7 +58,7 @@ class GetPollAPIViewV1(drf_generics.RetrieveAPIView):
 
 class GetRandomPollAPIViewV1(drf_views.APIView):
 
-	def get(self, request, format=None):
+	def get(self, request, *args, **kwargs):
 		poll_pk_list = Poll.objects.values_list('pk', flat=True)
 		poll = get_object_or_404(Poll, pk=random.choice(poll_pk_list))
 		serializer = PollSerializer(poll)

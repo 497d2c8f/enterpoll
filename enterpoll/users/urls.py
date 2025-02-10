@@ -1,8 +1,14 @@
-from django.urls import path
+from django.urls import path, include
 
-from . import views
+from . import views, api_views
+
+api_v1_patterns = [
+	path("login/", api_views.LoginAPIViewV1.as_view(), name="login_api_v1"),
+]
 
 urlpatterns = [
+    path("api/v1/", include(api_v1_patterns)),
+
 	path("registration/", views.RegistrationView.as_view(), name="registration"),
 	path("profile/<int:user_pk>/delete_user/", views.DeleteView.as_view(), name="delete_user"),
 	path("login/", views.LoginView.as_view(), name="login"),

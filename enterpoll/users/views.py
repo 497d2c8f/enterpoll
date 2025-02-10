@@ -51,7 +51,7 @@ class ProfileView(DetailView):
 
 	model = User
 	pk_url_kwarg = 'user_pk'
-	paginate_by = 10
+	paginate_by = 5
 	template_name = 'users/profile.html'
 
 	def get_context_data(self, *args, **kwargs):
