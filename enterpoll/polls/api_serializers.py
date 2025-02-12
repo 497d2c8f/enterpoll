@@ -1,7 +1,5 @@
 from rest_framework import serializers
 from .models import Poll, Choice, Vote, Rating, Comment
-from rest_framework.parsers import JSONParser
-import io
 import custom_validators
 from rest_framework import exceptions as drf_exceptions
 from django.utils.translation import gettext_lazy as _

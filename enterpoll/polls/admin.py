@@ -40,7 +40,7 @@ class PollAdmin(admin.ModelAdmin):
 	def choices(self, instance):
 		choices_and_votes = sorted(
 			(
-				(c.text, c.get_number_of_votes()) for c in instance.choice_set.all()
+				(c.text, c.number_of_votes) for c in instance.choice_set.all()
 			),
 			key=lambda item: item[1],
 			reverse=True
@@ -48,10 +48,10 @@ class PollAdmin(admin.ModelAdmin):
 		text = '\n'.join(f'{c} ({v})' for c, v in choices_and_votes)
 		return text
 	
-	@admin.display(description='Количество голосов')
-	def number_of_votes(self, instance):
-		return instance.get_number_of_votes()
+#	@admin.display(description='Количество голосов')
+#	def number_of_votes(self, instance):
+#		return instance.number_of_votes
 	
 	@admin.display(description='Рейтинг')
 	def average_rating(self, instance):
-		return round(instance.get_average_rating(), 2)
+		return round(instance.average_rating, 2)

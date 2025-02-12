@@ -46,8 +46,6 @@ class PollListAPIViewV1(drf_generics.ListAPIView):
 class CreatePollAPIViewV1(drf_generics.CreateAPIView):
 
 	permission_classes = [drf_permissions.IsAuthenticated]
-
-	queryset = Poll.objects.order_by('-created')
 	serializer_class = PollSerializer
 
 class GetPollAPIViewV1(drf_generics.RetrieveAPIView):
@@ -86,7 +84,6 @@ class VoteListAPIViewV1(drf_generics.ListAPIView):
 class CreateVoteAPIViewV1(drf_generics.CreateAPIView):
 
 	permission_classes = [drf_permissions.IsAuthenticated]
-
 	serializer_class = VoteSerializer
 
 class GetVoteAPIViewV1(drf_generics.RetrieveAPIView):
@@ -118,7 +115,6 @@ class RatingListAPIViewV1(drf_generics.ListAPIView):
 class CreateRatingAPIViewV1(drf_generics.CreateAPIView):
 
 	permission_classes = [drf_permissions.IsAuthenticated]
-
 	serializer_class = RatingSerializer
 
 class GetRatingAPIViewV1(drf_generics.RetrieveAPIView):
@@ -130,7 +126,6 @@ class GetRatingAPIViewV1(drf_generics.RetrieveAPIView):
 class DeleteRatingAPIViewV1(drf_generics.DestroyAPIView):
 
 	permission_classes = [drf_permissions.IsAuthenticated, IsAuthorOrAdmin]
-
 	queryset = Rating.objects.all()
 	serializer_class = RatingSerializer
 	lookup_url_kwarg = 'rating_pk'
@@ -150,7 +145,6 @@ class CommentListAPIViewV1(drf_generics.ListAPIView):
 class CreatePollCommentAPIViewV1(drf_generics.CreateAPIView):
 
 	permission_classes = [drf_permissions.IsAuthenticated]
-
 	serializer_class = CommentSerializer
 
 class GetCommentAPIViewV1(drf_generics.RetrieveAPIView):
@@ -162,7 +156,6 @@ class GetCommentAPIViewV1(drf_generics.RetrieveAPIView):
 class DeleteCommentAPIViewV1(drf_generics.DestroyAPIView):
 
 	permission_classes = [drf_permissions.IsAuthenticated, IsAuthorOrAdmin]
-
 	queryset = Comment.objects.all()
 	serializer_class = CommentSerializer
 	lookup_url_kwarg = 'comment_pk'
