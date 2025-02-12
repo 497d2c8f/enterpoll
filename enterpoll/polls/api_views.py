@@ -25,8 +25,8 @@ class MainPageAPIViewV1(drf_views.APIView):
 
 	def get(self, request, *args, **kwargs):
 		polls = Poll.objects.all()
-		most_popular_polls = sorted(polls, key=Poll.get_number_of_votes, reverse=True)[0:3]
-		highly_rated_polls = sorted(polls, key=Poll.get_average_rating, reverse=True)[0:3]
+		most_popular_polls = sorted(polls, key=(lambda poll: poll.number_of_votes), reverse=True)[0:3]
+		highly_rated_polls = sorted(polls, key=(lambda poll: poll.average_rating), reverse=True)[0:3]
 		latest_polls = polls.order_by('-created')[0:3]
 		response_dict = {
 			'most_popular_polls_pk': [poll.pk for poll in most_popular_polls],
