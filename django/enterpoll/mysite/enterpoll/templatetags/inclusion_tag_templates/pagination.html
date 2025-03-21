@@ -1,0 +1,21 @@
+<div class="pagination_container">
+	{% if page_obj.has_previous %}
+	    <a class="pagination_container_element" href="?{{ page_kwarg }}=1">&lt;&lt;</a>
+	    <a class="pagination_container_element" href="?{{ page_kwarg }}={{ page_obj.previous_page_number }}">&lt;</a>
+	{% else %}
+	    <a class="pagination_container_element" href="?{{ page_kwarg }}=1">&lt;&lt;</a>
+	    <a class="pagination_container_element" href="?{{ page_kwarg }}={{ page_obj.number }}">&lt;</a>
+	{% endif %}
+
+	<span class="pagination_container_element">
+	    Страница {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}
+	</span>
+
+	{% if page_obj.has_next %}
+	    <a class="pagination_container_element" href="?{{ page_kwarg }}={{ page_obj.next_page_number }}">&gt;</a>
+	    <a class="pagination_container_element" href="?{{ page_kwarg }}={{ page_obj.paginator.num_pages }}">&gt;&gt;</a>
+	{% else %}
+	    <a class="pagination_container_element" href="?{{ page_kwarg }}={{ page_obj.number }}">&gt;</a>
+	    <a class="pagination_container_element" href="?{{ page_kwarg }}={{ page_obj.paginator.num_pages }}">&gt;&gt;</a>
+	{% endif %}
+</div>

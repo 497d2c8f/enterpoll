@@ -1,0 +1,43 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			{% block title %}
+				block title
+			{% endblock title %}
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link type="text/css" href="{% static 'enterpoll/css/style.css' %}" rel="stylesheet"/>
+		<link rel="icon" href="{% static 'enterpoll/favicon.ico' %}">
+	</head>
+	<body>
+		<div class="table_of_contents">
+			{% block table_of_contents %}
+				<a class="table_of_contents_link" href="http://ivanefremov.space">ivanefremov.space</a>
+				<a class="table_of_contents_link" href="{% url 'main_page' %}">Enterpoll</a>
+				<a class="table_of_contents_link" href="{% url 'poll_list' %}">Список опросов</a>
+				<a class="table_of_contents_link" href="{% url 'random_poll_page' %}">Случайный опрос</a>
+				{% if user.is_authenticated %}
+					<a class="table_of_contents_link" href="{% url 'create_poll' %}">Создать опрос</a>
+					<a class="table_of_contents_link" href="{% url 'profile' user.pk %}">Профиль</a>
+				{% endif %}
+				{% if user.is_superuser %}
+					<a class="table_of_contents_link" href="{% url 'admin:index' %}">Админ-панель</a>
+				{% endif %}
+				<a class="table_of_contents_link" href="{% url 'registration' %}">Регистрация</a>
+				<a class="table_of_contents_link" href="{% url 'login' %}">Вход</a>
+				{% if user.is_authenticated %}
+					<a class="table_of_contents_link" href="{% url 'logout' %}">Выход</a>
+				{% endif %}
+			{% endblock table_of_contents %}
+		</div>
+		<div>
+			<h1>{% block h1 %}block h1{% endblock h1 %}</h1>
+		</div>
+		<div>
+			{% block content %}block content{% endblock content %}
+		</div>
+	</body>
+</html>

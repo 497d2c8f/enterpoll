@@ -1,0 +1,431 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+
+
+@font-face {
+	font-family: 'CascadiaMono';
+	src: url('../fonts/CascadiaMono.ttf') format("truetype");
+}
+
+@font-face {
+	font-family: 'CascadiaMonoItalic';
+	src: url('../fonts/CascadiaMonoItalic.ttf') format("truetype");
+}
+
+body {
+	font-family: 'CascadiaMono', monospace;
+	background: #f5f8fa;
+	color: #04202c;
+	margin: 0;
+}
+
+h1 {
+	background: #04202c;
+	color: #f5f8fa;
+	text-align: center;
+	font-size: 400%;
+	font-weight: bold;
+	cursor: default;
+	padding: 1%;
+	margin-bottom: 0.5em;
+	transition: 0.1s cubic-bezier(0, .3, .3, 1);
+}
+
+h1:hover {
+	font-weight: lighter;
+	letter-spacing: 10%;
+}
+
+h1:active {
+	font-weight: bold;
+	letter-spacing: 0px;
+}
+
+h2 {
+	color: #04202c;
+	text-align: center;
+	font-size: 300%;
+	font-weight: bold;
+	padding: 4vh 1vw 2vh 1vw;
+}
+
+h3 {
+	color: #04202c;
+	font-size: 200%;
+	font-weight: bold;
+	padding: 1%;
+}
+
+p {
+	margin: 2vh 0vw;
+}
+
+b {
+	font-weight: bold;
+}
+
+button {
+	color: #04202c;
+	font-family: 'CascadiaMono', monospace;
+}
+
+.table_of_contents {
+	padding: 0.5%;
+}
+ 
+.table_of_contents_link {
+	width: 100vw;
+	padding: 0vh 1vw;
+	font-size: 150%;
+}
+
+a {
+	color: #04202c;
+	font-weight: bold;
+	text-decoration: none;
+	transition: 0.1s cubic-bezier(0, .3, .3, 1);
+}
+
+a:visited {
+	color: #04202c;
+	font-weight: bold;
+	text-decoration: none;
+}
+ 
+a:hover {
+	color: #0f678c;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+a:active {
+	color: #04202c;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.main_page_polls_container {
+	display: flex;
+}
+
+.main_page_polls_container_element {
+	width: 100vw;
+	padding: 1vh 1vw;
+	text-align: center;
+	font-size: 200%;
+	transition: 0.1s cubic-bezier(0, .3, .3, 1);
+}
+
+.poll_list {
+	text-align: center;
+	font-size: 200%;
+}
+
+.poll_list_element {
+	padding: 0.5em 1em;
+}
+
+.pagination_container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: stretch;
+	align-content: stretch;
+}
+
+.pagination_container_element {
+	width: 10vw;
+	padding: 0.5vh 0vw;
+	text-align: center;
+	font-size: 150%;
+	cursor: default;
+	transition: 0.1s cubic-bezier(0, .3, .3, 1);
+}
+
+.pagination_container_element:hover {
+	background: #04202c;
+	color: #f5f8fa;
+	text-decoration: none;
+}
+
+.poll_choice_list {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: stretch;
+	align-content: stretch;
+	padding: 2vh 0vw;
+}
+
+.poll_choice {
+	width: 100%;
+}
+
+.delete_poll_form_container {
+	display: block;
+	text-align: center;
+	padding-bottom: 1em;
+}
+
+.delete_poll_form {
+	display: inline-block;
+	width: 15em;
+}
+
+.poll_form_container input, .delete_poll_button, .poll_choice_button, .poll_rating_button, .poll_page_comment_form_button {
+	width: 100%;
+	height: 2em;
+	padding: 0;
+	font-size: 125%;
+	text-align: center;
+	background-color: #f5f8fa;
+	border: none;
+	border-radius: 0px;
+	transition: 0.1s cubic-bezier(0, .3, .3, 1);
+}
+
+.poll_form_container input[type="submit"] {
+	width: 20%;
+}
+
+.choices_number_form_container input, .poll_page_comment_deletion_form input {
+	height: 2em;
+	padding: 0 1em;
+	font-size: 125%;
+	text-align: center;
+	background-color: #d3e0e8;
+	color: #04202c;
+	border: none;
+	border-radius: 0px;
+	transition: 0.1s cubic-bezier(0, .3, .3, 1);
+}
+
+.delete_poll_button {
+	background-color: #d3e0e8;
+}
+
+.poll_page_comment_form_button, .poll_form_container input {
+	background-color: #d3e0e8;
+}
+
+.poll_rating_button {
+	padding: 0 0.75em;
+	font-size: 100%;
+}
+
+.selected_poll_choice_button, .selected_poll_rating_button {
+	background-color: #d3e0e8;
+}
+
+.poll_page_comment_deletion_form input:hover, .choices_number_form_container input:hover, .poll_form_container input:hover, .delete_poll_button:hover, .poll_choice_button:hover, .poll_rating_button:hover, .poll_page_comment_form_button:hover {
+	background-color: #04202c;
+	color: #f5f8fa;
+}
+
+.poll_page_comment_deletion_form input:active, .choices_number_form_container input:active, .poll_form_container input:active, .delete_poll_button:active, .poll_choice_button:active, .poll_rating_button:active, .poll_page_comment_form_button:active {
+	font-weight: bold;
+	letter-spacing: 1%;
+}
+
+.poll_page_description {
+	text-align: center;
+	font-size: 200%;
+	margin: 1em 1em;
+}
+
+.poll_info_container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: stretch;
+	align-content: stretch;
+	padding: 2vh 0vw;
+}
+
+.poll_info_element {
+	width: 100vw;
+	margin: 0vh 0vw;
+	text-align: center;
+}
+
+.poll_info_element_text {
+	height: 2em;
+	padding: 2.5%;
+	line-height: 2.5em;
+	font-size: 125%;
+}
+
+.poll_page_comments_container {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+	align-content: stretch;
+	padding-bottom: 5vh;
+}
+
+.poll_page_comment_form {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: stretch;
+	align-content: stretch;
+	padding: 1.5em;
+}
+
+.poll_page_comment {
+	padding: 1.5em;
+	text-align: center;
+}
+
+.registration_form_container {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+	text-align: center;
+	font-size: 200%;
+}
+
+.registration_form_container input {
+	font-size: 100%;
+	margin-top: 2.5%;
+	margin-bottom: 5%;
+}
+
+.registration_form_container .helptext {
+	font-size: 50%;
+}
+
+.login_form_container {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+	text-align: center;
+	font-size: 200%;
+}
+
+.login_form_container input {
+	font-size: 100%;
+	margin-top: 2.5%;
+	margin-bottom: 5%;
+}
+
+.login_form_container .helptext {
+	font-size: 50%;
+}
+
+.registration_form_container input[type="submit"] {
+	margin: 1% 0%;
+}
+
+.login_form_container input[type="submit"] {
+	margin: 1% 0%;
+}
+
+.choices_number_form_container, .poll_form_container {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+	text-align: center;
+	font-size: 200%;
+}
+
+.choices_number_form_container input {
+	font-size: 100%;
+	margin-top: 2.5%;
+	margin-bottom: 5%;
+}
+
+.poll_form_container input {
+	font-size: 100%;
+	margin-top: 2.5%;
+	margin-bottom: 2.5%;
+}
+
+.user_credentials_container,
+.profile_created_polls_container,
+.profile_votes_container,
+.profile_ratings_container,
+.profile_comments_container {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+	text-align: center;
+	font-size: 200%;
+}
+
+.user_credentials_container_element,
+.profile_created_polls_container_element,
+.profile_votes_container_element,
+.profile_ratings_container_element,
+.profile_comments_container_element {
+	margin-top: 1%;
+	& p {
+		margin: 2%;
+	}
+}

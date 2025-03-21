@@ -1,0 +1,120 @@
+{% extends "enterpoll/base.html" %}
+
+{% load pagination %}
+
+{% block title %}Опрос{% endblock title %}
+{% block h1 %}Опрос{% endblock h1 %}
+{% block content %}
+	<h2>{{ poll.title }}</h2>
+	{% if poll.user == user %}
+		<div class="delete_poll_form_container">
+			<form class="delete_poll_form" method="POST">
+				{% csrf_token %}
+				<input type="text" name="action_type" value="delete_poll" hidden>
+				<button class="delete_poll_button" type="submit" value="Удалить опрос">
+					Удалить опрос
+				</button>
+			</form>
+		</div>
+	{% endif %}
+	<div class="poll_choice_list">
+		{% for choice in poll.choice_set.all %}
+			<div class="poll_choice">
+				<form class="poll_choice_form" method="POST">
+					{% csrf_token %}
+					{% if choice == user_choice %}
+						<input type="text" name="action_type" value="delete_vote" hidden>
+						<input type="text" name="choice_pk" value="{{ choice.pk }}" hidden>
+						<button class="poll_choice_button selected_poll_choice_button" type="submit">
+							{{ choice.text }} ({{ choice.number_of_votes }})
+						</button>
+					{% else %}
+						<input type="text" name="action_type" value="vote" hidden>
+						<input type="text" name="choice_pk" value="{{ choice.pk }}" hidden>
+						<button class="poll_choice_button" type="submit">
+							{{ choice.text }} ({{ choice.number_of_votes }})
+						</button>
+					{% endif %}
+				</form>
+			</div>
+		{% endfor %}
+	</div>
+	<p class="poll_page_description">{{ poll.description|default:"..." }}</p>
+	<div class="poll_info_container">
+		<div class="poll_info_element"><h3>Автор</h3>
+			<div class="poll_info_element_text">
+				{{ poll.user }}
+			</div class="poll_info_element_text">
+		</div>
+		<div class="poll_info_element"><h3>Создан</h3>
+			<div class="poll_info_element_text">
+				{{ poll.created|date:"Y.m.d H:i:s e" }}
+			</div class="poll_info_element_text">
+		</div>
+		<div class="poll_info_element"><h3>Голосов</h3>
+			<div class="poll_info_element_text">
+				{{ poll.number_of_votes }}
+			</div class="poll_info_element_text">
+		</div>
+		<div class="poll_info_element"><h3>Рейтинг</h3>
+			<div class="poll_info_element_text">
+				{{ poll.average_rating|floatformat:1 }} (Всего оценок: {{ poll.number_of_ratings }})
+			</div class="poll_info_element_text">
+		</div>
+		<div class="poll_info_element">
+			{% spaceless %}
+				<h3>Оценить</h3>
+				<div class="poll_info_element_text">
+					{% for x in '12345' %}
+						<form method="POST" style="display: inline-block">
+							{% csrf_token %}
+							{% if user_rating.value == x|add:"0" %}
+								<input type="text" name="action_type" value="delete_rating" hidden>
+								<button class="poll_rating_button selected_poll_rating_button" type="submit" name="rating_value" value="{{ x }}">
+									{{ x }}
+								</button>
+							{% else %}
+								<input type="text" name="action_type" value="rate" hidden>
+								<button class="poll_rating_button" type="submit" name="rating_value" value="{{ x }}">
+									{{ x }}
+								</button>
+							{% endif %}
+						</form>
+					{% endfor %}
+				</div class="poll_info_element_text">
+			{% endspaceless %}
+		</div>
+	</div>
+	<div class="poll_page_comments_container">
+		<h2>Комментарии</h2>
+		{% pagination comments_page_kwarg comments_page_obj %}
+			<form class="poll_page_comment_form" method="POST">
+				{% csrf_token %}
+				{{ comment_modelform }}
+				<input type="text" name="action_type" value="comment" hidden>
+				<button class="poll_page_comment_form_button" type="submit" value="Отправить">
+					Отправить
+				</button>
+			</form>
+		{% for comment in comments_page_obj %}
+			<div class="poll_page_comment">
+				<b>{{ comment.user }} ({{ comment.created|date:"Y.m.d H:i:s e" }})</b>
+				{% if comment.user == user %}
+					<form class="poll_page_comment_deletion_form" method="POST" style="display: inline-block">
+						{% csrf_token %}
+							<input type="text" name="action_type" value="delete_comment" hidden>
+							<input type="text" name="comment_pk" value="{{ comment.pk }}" hidden>
+							<input type="submit" value="Удалить">
+					</form>
+				{% endif %}
+				<br>
+				<br>
+				{{ comment.text }}
+			</div>
+		{% empty %}
+			<div class="poll_page_comment">
+				Комментарии отсутствуют.
+			</div>
+		{% endfor %}
+	</div>
+{% endblock content %}
