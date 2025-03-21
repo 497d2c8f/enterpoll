@@ -1,0 +1,11 @@
+{% extends "enterpoll/base.html" %}
+
+{% load static %}
+
+{% block title %}API URL List{% endblock title %}
+{% block h1 %}API URL List{% endblock h1 %}
+{% block content %}
+	{% for name, url in api_url_list %}
+		<p>{{ name }}: http://ivanefremov.space/{{ url }}</p>
+	{% endfor %}
+{% endblock content %}

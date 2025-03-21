@@ -53,6 +53,7 @@ comments_urls = [
 
 
 urlpatterns = [
+	path("", api_views.api_url_list, name="api_url_list_v1"),
 	path("main_page/", api_views.MainPageAPIViewV1.as_view(), name="main_page_api_v1"),
 	path('users/', include(users_urls)),
 	path('polls/', include(polls_urls)),

@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.password_validation import validate_password
 from django.shortcuts import get_object_or_404
+from django.shortcuts import render
+from django.urls import get_resolver
 from ..models import Poll, Choice, Vote, Comment, Rating
 import random
 import redis
@@ -29,6 +31,18 @@ from .api_serializers import (
 
 
 REDIS_TTL = 10
+
+
+def api_url_list(request):
+
+	api_url_names = filter(lambda key: isinstance(key, str) and 'api_v1' in key, get_resolver().reverse_dict.keys())
+	return render(
+		request,
+		'api/api_url_list.html',
+		context={
+			'api_url_list': sorted([(api_url_name, get_resolver().reverse_dict[api_url_name][0][0][0]) for api_url_name in api_url_names])
+		}
+	)
 
 
 class RegistrationAPIViewV1(drf_generics.CreateAPIView):
